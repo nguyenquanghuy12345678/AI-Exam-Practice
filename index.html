@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithm Solver - Giải bài tập thuật toán</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Algorithm Solver & Visualizer</h1>
+            <p>Giải bài tập thuật toán với trực quan hóa chi tiết từng bước</p>
+        </header>
+
+        <div class="algorithm-selector">
+            <label for="algorithm">Chọn thuật toán:</label>
+            <select id="algorithm" onchange="switchAlgorithm()">
+                <optgroup label="🔍 Thuật toán Tìm kiếm">
+                    <option value="astar">A* Search</option>
+                    <option value="ucs">Uniform Cost Search (UCS)</option>
+                    <option value="greedy">Greedy Best-First Search</option>
+                </optgroup>
+                <optgroup label="🎮 Lý thuyết Trò chơi">
+                    <option value="alphabeta">Alpha-Beta Pruning (Minimax)</option>
+                </optgroup>
+                <optgroup label="📊 Phân loại & Hồi quy">
+                    <option value="naivebayes">Naïve Bayes Classifier</option>
+                    <option value="regression">Linear Regression</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="main-content">
+            <!-- A* SEARCH -->
+            <div id="astar-panel" class="algorithm-panel active">
+                <h2>A* Search Algorithm</h2>
+                <p class="description">Công thức: f(n) = g(n) + h(n), trong đó g(n) là chi phí thực tế, h(n) là ước
+                    lượng heuristic</p>
+
+                <div class="two-column">
+                    <div class="input-section">
+                        <h3>📝 Input</h3>
+                        <div class="form-group">
+                            <label>Danh sách đỉnh (nodes):</label>
+                            <textarea id="astar-nodes" rows="2">A,B,C,D,E</textarea>
+                            <small>Cách nhau bởi dấu phẩy</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Cạnh và chi phí (format: từ-đến-giá):</label>
+                            <textarea id="astar-edges" rows="5">A-B-2
+A-E-5
+B-C-4
+E-C-4
+C-D-3</textarea>
+                            <small>Mỗi cạnh một dòng, format: node1-node2-cost</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Heuristic h(n) (format: node=giá_trị):</label>
+                            <textarea id="astar-heuristic" rows="5">A=8
+B=6
+C=1
+D=0
+E=5</textarea>
+                            <small>Mỗi heuristic một dòng</small>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Điểm bắt đầu:</label>
+                                <input type="text" id="astar-start" value="A">
+                            </div>
+                            <div class="form-group">
+                                <label>Điểm đích:</label>
+                                <input type="text" id="astar-goal" value="D">
+                            </div>
+                        </div>
+                        <button class="btn-solve" onclick="solveAStar()">🚀 Giải A*</button>
+                    </div>
+
+                    <div class="output-section">
+                        <h3>📤 Output & Visualization</h3>
+                        <div id="astar-output" class="result-box"></div>
+                        <div id="astar-steps" class="steps-box"></div>
+                        <canvas id="astar-canvas" width="600" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UCS -->
+            <div id="ucs-panel" class="algorithm-panel">
+                <h2>Uniform Cost Search (UCS)</h2>
+                <p class="description">Công thức: f(n) = g(n), chỉ dựa vào chi phí thực tế từ điểm bắt đầu</p>
+
+                <div class="two-column">
+                    <div class="input-section">
+                        <h3>📝 Input</h3>
+                        <div class="form-group">
+                            <label>Danh sách đỉnh:</label>
+                            <textarea id="ucs-nodes" rows="2">S,A,B,C,D,E,G</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Cạnh và chi phí:</label>
+                            <textarea id="ucs-edges" rows="7">S-A-1
+S-B-5
+A-D-2
+B-D-1
+D-C-3
+C-E-4
+E-G-0</textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Điểm bắt đầu:</label>
+                                <input type="text" id="ucs-start" value="S">
+                            </div>
+                            <div class="form-group">
+                                <label>Điểm đích:</label>
+                                <input type="text" id="ucs-goal" value="G">
+                            </div>
+                        </div>
+                        <button class="btn-solve" onclick="solveUCS()">🚀 Giải UCS</button>
+                    </div>
+
+                    <div class="output-section">
+                        <h3>📤 Output & Visualization</h3>
+                        <div id="ucs-output" class="result-box"></div>
+                        <div id="ucs-steps" class="steps-box"></div>
+                        <canvas id="ucs-canvas" width="600" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GREEDY -->
+            <div id="greedy-panel" class="algorithm-panel">
+                <h2>Greedy Best-First Search</h2>
+                <p class="description">Công thức: f(n) = h(n), chỉ dựa vào ước lượng heuristic đến đích</p>
+
+                <div class="two-column">
+                    <div class="input-section">
+                        <h3>📝 Input</h3>
+                        <div class="form-group">
+                            <label>Danh sách đỉnh:</label>
+                            <textarea id="greedy-nodes" rows="2">S,A,B,C,D,E,G</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Cạnh và chi phí:</label>
+                            <textarea id="greedy-edges" rows="7">S-A-1
+S-C-6
+A-D-4
+C-E-3
+E-G-4
+D-G-5
+B-G-3</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Heuristic h(n):</label>
+                            <textarea id="greedy-heuristic" rows="7">S=10
+A=8
+B=7
+C=4
+D=6
+E=2
+G=0</textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Điểm bắt đầu:</label>
+                                <input type="text" id="greedy-start" value="S">
+                            </div>
+                            <div class="form-group">
+                                <label>Điểm đích:</label>
+                                <input type="text" id="greedy-goal" value="G">
+                            </div>
+                        </div>
+                        <button class="btn-solve" onclick="solveGreedy()">🚀 Giải Greedy</button>
+                    </div>
+
+                    <div class="output-section">
+                        <h3>📤 Output & Visualization</h3>
+                        <div id="greedy-output" class="result-box"></div>
+                        <div id="greedy-steps" class="steps-box"></div>
+                        <canvas id="greedy-canvas" width="600" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ALPHA-BETA PRUNING -->
+            <div id="alphabeta-panel" class="algorithm-panel">
+                <h2>Alpha-Beta Pruning (Minimax)</h2>
+                <p class="description">Cắt tỉa cây trò chơi để giảm số node cần đánh giá</p>
+
+                <div class="two-column">
+                    <div class="input-section">
+                        <h3>📝 Input</h3>
+                        <div class="form-group">
+                            <label>Cây trò chơi (mỗi dòng: node-type-parent hoặc node-value cho lá):</label>
+                            <textarea id="alphabeta-tree" rows="15">A-MAX-null
+B-MIN-A
+C-MIN-A
+D-MIN-A
+E-MAX-B
+F-MAX-B
+G-MAX-C
+H-MAX-C
+I-MAX-D
+J-MAX-D
+K-3-E
+L-5-E
+M-6-F
+N-9-F
+O-1-G
+P-2-G
+Q-0-H
+R--1-H
+S-7-I
+T-5-I
+U-4-J
+V=2-J</textarea>
+                            <small>Format: node-type-parent (type: MAX/MIN/giá_trị)</small>
+                        </div>
+                        <button class="btn-solve" onclick="solveAlphaBeta()">🚀 Giải Alpha-Beta</button>
+                    </div>
+
+                    <div class="output-section">
+                        <h3>📤 Output & Visualization</h3>
+                        <div id="alphabeta-output" class="result-box"></div>
+                        <div id="alphabeta-steps" class="steps-box"></div>
+                        <canvas id="alphabeta-canvas" width="600" height="500"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NAIVE BAYES -->
+            <div id="naivebayes-panel" class="algorithm-panel">
+                <h2>Naïve Bayes Classifier</h2>
+                <p class="description">Phân loại dựa trên xác suất có điều kiện</p>
+
+                <div class="two-column">
+                    <div class="input-section">
+                        <h3>📝 Input</h3>
+                        <div class="form-group">
+                            <label>Dữ liệu huấn luyện (CSV):</label>
+                            <textarea id="naivebayes-data" rows="15">Outlook,Temp,Humidity,Wind,PlayTennis
+Sunny,Hot,High,Weak,No
+Sunny,Hot,High,Strong,No
+Overcast,Hot,High,Weak,Yes
+Rainy,Mild,High,Weak,Yes
+Rainy,Cool,Normal,Weak,Yes
+Rainy,Cool,Normal,Strong,No
+Overcast,Cool,Normal,Strong,Yes
+Sunny,Mild,High,Weak,No
+Sunny,Cool,Normal,Weak,Yes
+Rainy,Mild,Normal,Weak,Yes
+Sunny,Mild,Normal,Strong,Yes
+Overcast,Mild,High,Strong,Yes
+Overcast,Hot,Normal,Weak,Yes
+Rainy,Mild,High,Strong,No</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Dữ liệu cần dự đoán (format: feature=value):</label>
+                            <textarea id="naivebayes-predict" rows="4">Outlook=Overcast
+Temp=Mild
+Humidity=Normal
+Wind=Weak</textarea>
+                        </div>
+                        <button class="btn-solve" onclick="solveNaiveBayes()">🚀 Phân loại</button>
+                    </div>
+
+                    <div class="output-section">
+                        <h3>📤 Output & Chi tiết tính toán</h3>
+                        <div id="naivebayes-output" class="result-box"></div>
+                        <div id="naivebayes-steps" class="steps-box"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LINEAR REGRESSION -->
+            <div id="regression-panel" class="algorithm-panel">
+                <h2>Linear Regression</h2>
+                <p class="description">Hồi quy tuyến tính: Ŷ = a + bX</p>
+
+                <div class="two-column">
+                    <div class="input-section">
+                        <h3>📝 Input</h3>
+                        <div class="form-group">
+                            <label>Dữ liệu (x,y) - mỗi dòng một cặp:</label>
+                            <textarea id="regression-data" rows="10">1,502
+2,519
+3,536
+4,553
+5,570
+6,587
+7,604
+8,621</textarea>
+                            <small>Format: x,y (mỗi dòng một cặp giá trị)</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Giá trị x cần dự đoán:</label>
+                            <input type="number" id="regression-predict" value="10" step="0.1">
+                        </div>
+                        <button class="btn-solve" onclick="solveRegression()">🚀 Tính hồi quy</button>
+                    </div>
+
+                    <div class="output-section">
+                        <h3>📤 Output & Visualization</h3>
+                        <div id="regression-output" class="result-box"></div>
+                        <div id="regression-steps" class="steps-box"></div>
+                        <canvas id="regression-canvas" width="600" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>💡 Algorithm Solver - Công cụ giải bài tập thuật toán với trực quan hóa</p>
+        </footer>
+    </div>
+
+    <script src="js/astar.js"></script>
+    <script src="js/ucs.js"></script>
+    <script src="js/greedy.js"></script>
+    <script src="js/alphabeta.js"></script>
+    <script src="js/naivebayes.js"></script>
+    <script src="js/regression.js"></script>
+    <script src="js/visualization.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
