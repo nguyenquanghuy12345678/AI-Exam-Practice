@@ -162,6 +162,21 @@ header p {
     font-size: 0.85em;
 }
 
+.example-note {
+    background: linear-gradient(135deg, #fff9e6 0%, #fffbf0 100%);
+    border-left: 4px solid #ffc107;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    line-height: 1.6;
+    box-shadow: 0 1px 3px rgba(255, 193, 7, 0.1);
+}
+
+.example-note strong {
+    color: #f57c00;
+}
+
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
